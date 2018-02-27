@@ -1,0 +1,29 @@
+
+-- 模版树的节点在  模版表没有记录的节点
+SELECT *
+FROM boot_code_entry e
+WHERE e.category_id IN
+      (SELECT c.category_id FROM boot_code_category c
+       WHERE c.category_code IN ('product-VIEW_TEMPLATE_TREE'))
+  and not exists(select * from t_view_template p where p.id = e.entry_code) --模版表没有记录的节点
+  and e.parent_id <>'0'    --非一级节点
+order by e.ENTRY_ID,e.PARENT_ID;
+
+
+-- 模版表有，但是模版树没有的
+SELECT
+         c.CONTENT,
+         c.serialno,
+         p.id,
+         p.name,
+         c.id  as testid
+       FROM t_view_template p, t_clob_content c
+       WHERE c.ID = p.CLOB_ID
+       and not exists(SELECT *
+FROM boot_code_entry e
+WHERE e.category_id IN
+      (SELECT c.category_id FROM boot_code_category c
+       WHERE c.category_code IN ('product-VIEW_TEMPLATE_TREE'))
+       and e.entry_code = p.id
+       )
+       ORDER BY p.id, c.serialno

@@ -1,0 +1,6 @@
+--产品表
+select * from T_PRODUCT_MODEL t;
+--产品版本表
+select * from t_Product_Version_Mapping t;
+--产品版本对应方案表
+select * from T_MARKET_SCHEME_VERSION t;
